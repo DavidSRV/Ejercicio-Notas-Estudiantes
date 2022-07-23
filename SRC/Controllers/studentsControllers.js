@@ -2,23 +2,24 @@ const studentsControllers = {};
 const e = require("express");
 
 studentsControllers.getAll = (req, res) => {
-
     console.log(res);
-
 }
 
-const notasFinales = [];
-const mayorNota = {};
-const perdieron = [];
-const habilitan = [];
-const response = [];
-const ganan = {};
+
+
 
 studentsControllers.create = (req, res) => {
-
+    const notasFinales = [];
+    const mayorNota = {};
+    const perdieron = [];
+    const habilitan = [];
+    const response = {};
+    const ganan = {};
     let notaMayor = 0;
 
     const notas = req.body;
+    
+    let cganan = 0;
 
     for (let i = 0; i < notas["estudiantes"].length; i++) {
         const defnotas = notas["estudiantes"][i];
@@ -31,11 +32,8 @@ studentsControllers.create = (req, res) => {
 
         notasFinales.push(obj_estudiante);
         
-        let cganan = 0;
-
         if(notaFinal > 3.0){
           cganan++
-            ganan['Estqueganaron'] = cganan;
         }
 
         if (notaFinal > notaMayor) {
@@ -45,28 +43,33 @@ studentsControllers.create = (req, res) => {
         }
 
         let obj_estudiante1 = {}
-
+        //calcular estudiantes que perdieron
         if (notaFinal <= 2.9) {
             obj_estudiante1.nombre = defnotas.nombre;
             obj_estudiante1.perdieronMateria = notaFinal;
+            perdieron.push(obj_estudiante1);
         }
-        perdieron.push(obj_estudiante1);
+        
 
         let obj_estudiante2 = {}
 
-        if (notaFinal <= 2.9 & notaFinal >= 2.0) {
-            obj_estudiante2['nombre'] = defnotas['nombre']; obj_estudiante2.Habilitan = notaFinal
+        if (notaFinal <= 2.9 && notaFinal >= 2.0) {
+            obj_estudiante2['nombre'] = defnotas['nombre']; 
+            obj_estudiante2.Habilitan = notaFinal
+            habilitan.push(obj_estudiante2);
         }
-        habilitan.push(obj_estudiante2);
+        
     }
 
-    response.push(notasFinales);
-    response.push([mayorNota]);
-    response.push(perdieron);
-    response.push(habilitan);
-    response.push([ganan]);
+    response.notasfinales=notasFinales;
+    response.mayornotas=mayorNota;
+    response.perdieron=perdieron;
+    response.habilitan=habilitan;
+    response.estdiantesganaron=cganan;
 
-    res.json({response});
+    res.json(response);
+
+
 
 };
 
